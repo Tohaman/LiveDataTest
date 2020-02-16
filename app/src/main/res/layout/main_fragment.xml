@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.text.TextUtils"/>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="ru.tohaman.livedatatest.ui.main.MainViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.MainFragment">
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Hello World"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Зададим значение через биндинг, поэтому @+id/count можно убрать -->
+        <!-- Можно задать видимость объекта в зависимости от значения какой-то переменной, пример в visibility -->
+        <!-- но для этого надо добавит в data две строки импорта -->
+        <!-- <import type="android.text.TextUtils"/> -->
+        <!-- <import type="android.view.View"/> -->
+        <!-- если инициализоровать во фрагменте viewModel через = ViewModelProvider(this).get(MainViewModel::class.java) -->
+        <!-- то этот элемент не отобразится, для этого и сделан android:background="@color/colorPrimary" -->
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:padding="16dp"
+            tools:text = "0"
+            android:text="@{viewModel.count.toString()}"
+            android:visibility="@{TextUtils.isEmpty(viewModel.count.toString()) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/count2"
+            app:layout_constraintTop_toBottomOf="@+id/message" />
+
+        <TextView
+            android:id="@+id/count2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            tools:text = "100"
+            app:showInt="@{viewModel.observableCount}"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/count" />
+
+        <!-- Нажатие можно обрабатывать так-->
+        <!-- android:onClick="@{() -> viewModel.onButtonClick2()}"-->
+        <!-- или так-->
+        <!-- android:onClick="@{(view) -> viewModel.onButtonClick(view)}"-->
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/app_name"
+            android:onClick="@{() -> viewModel.onButtonClick2()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
