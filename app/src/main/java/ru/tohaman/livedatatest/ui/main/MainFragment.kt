@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.main_fragment.*
 import ru.tohaman.livedatatest.databinding.MainFragmentBinding
@@ -19,12 +20,17 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
+    //или инициализируем через by viewModels, но для этого надо добавить implementation "androidx.navigation:navigation-fragment-ktx:2.2.1" в build.gradle
+    private val viewModel:MainViewModel by viewModels{
+        MainViewModel.Companion.MainViewModelFactory(Random.nextInt(1,10))
+    }
     private lateinit var binding: MainFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         Timber.d("onCreateView")
+        viewModel.count.value = 1
         //создаем объект биндинга, имя генерируемый класс = имя соответствующего лэйаута (с большими буквами) + Binding
         binding = MainFragmentBinding.inflate(inflater, container, false)
             //.apply { lifecycleOwner = this@MainFragment }
@@ -39,7 +45,7 @@ class MainFragment : Fragment() {
         //но в этом случае viewModel.count не будет сразу инициализирован
 
         val rnd = Random.nextInt(1,10)
-        viewModel = ViewModelProvider(this, MainViewModel.Companion.MainViewModelFactory(rnd)).get(MainViewModel::class.java)
+        //viewModel = ViewModelProvider(this, MainViewModel.Companion.MainViewModelFactory(rnd)).get(MainViewModel::class.java)
         //передаем viewModel в биндинг (один раз и все, больше его не обновляем)
         Timber.d("binding.viewModel")
         binding.viewModel = viewModel

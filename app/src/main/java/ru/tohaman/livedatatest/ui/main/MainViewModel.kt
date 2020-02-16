@@ -39,7 +39,7 @@ class MainViewModel(private val _count: MutableLiveData<Int> = MutableLiveData()
     }
 
     private fun loadData(rnd : Int) {
-        helloText.postValue("New Int Value Generated - $rnd")
+        helloText.value = "New Int Value Generated - $rnd"
     }
 
     /** Метод не обязательно должен наследовать OnClickListener. Но должен быть public и иметь те же параметры,
@@ -53,7 +53,7 @@ class MainViewModel(private val _count: MutableLiveData<Int> = MutableLiveData()
         Timber.d("onButtonClick")
         val rnd = Random.nextInt(1,10)
         loadData(rnd)
-        count.postValue(rnd)
+        count.value = rnd
         observableCount.set(rnd)
     }
 
@@ -61,8 +61,7 @@ class MainViewModel(private val _count: MutableLiveData<Int> = MutableLiveData()
         Timber.d("onButtonClick2")
         val rnd = Random.nextInt(1,10)
         loadData(rnd)
-        count.postValue(rnd)
-
+        count.value = rnd
         observableCount.set(rnd)
     }
 
