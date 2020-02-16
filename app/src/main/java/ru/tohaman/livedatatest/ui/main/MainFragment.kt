@@ -22,8 +22,10 @@ class MainFragment : Fragment() {
 
     //private lateinit var viewModel: MainViewModel
     //или инициализируем через by viewModels, но для этого надо добавить implementation "androidx.navigation:navigation-fragment-ktx:2.2.1" в build.gradle
-    private val viewModel:MainViewModel by viewModels{
-        MainViewModel.Companion.MainViewModelFactory(Random.nextInt(1,10))
+    private val viewModel : MainViewModel by viewModels{
+        val rnd = Random.nextInt(1,10)
+        Timber.d("by viewModels with $rnd")
+        MainViewModel.Companion.MainViewModelFactory(rnd)
     }
     private lateinit var binding: MainFragmentBinding
 
