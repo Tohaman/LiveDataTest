@@ -9,6 +9,9 @@
         <variable
             name="viewModel"
             type="ru.tohaman.livedatatest.ui.main.MainViewModel"/>
+        <variable
+            name="testItem"
+            type="ru.tohaman.livedatatest.data.TestItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +19,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.MainFragment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text = "1"
+            app:showInt="@{testItem.i}"
+            app:layout_constraintBottom_toTopOf="@+id/message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/message"

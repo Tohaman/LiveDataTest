@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.main_fragment.*
+import ru.tohaman.livedatatest.data.TestItem
 import ru.tohaman.livedatatest.databinding.MainFragmentBinding
+import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -37,6 +39,7 @@ class MainFragment : Fragment() {
         binding = MainFragmentBinding.inflate(inflater, container, false)
             //.apply { lifecycleOwner = this@MainFragment }
         //возвращаем view, т.е. root элемент нашего биндинга
+
         return binding.root
     }
 
@@ -51,6 +54,12 @@ class MainFragment : Fragment() {
         //передаем viewModel в биндинг (один раз и все, больше его не обновляем)
         Timber.d("binding.viewModel")
         binding.viewModel = viewModel
+
+        //Казалось бы можно сделать так
+        //binding.testItem = viewModel.getTestItem().value
+        //но в этом случае, не будет автообновления переменной
+        val dataTestItem : LiveData<TestItem> = viewModel.getTestItem()
+        dataTestItem.observe(viewLifecycleOwner, Observer { binding.testItem = it })
 
         //но можем связать какое-то свойство визуального объекта и не через биндинг, а по-старинке
         //вместо findViewById просто используем id элемента, например, message.text = ....
@@ -73,7 +82,6 @@ class MainFragment : Fragment() {
         Ограничения XML не позволяют просто так использовать символы < и >. Поэтому их приходится заменять спецсимволами &lt; и &gt;.
         подробнее можно посмотреть на https://startandroid.ru/ru/courses/architecture-components/27-course/architecture-components/552-urok-19-android-data-binding-vozmozhnosti.html
         */
-
     }
 
 }

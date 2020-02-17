@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import ru.tohaman.livedatatest.data.TestItem
 import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
 import kotlin.random.Random
@@ -25,6 +26,8 @@ class MainViewModel : ViewModel() {
     //А такая будет автообноляться и в биндинге
     var observableCount = ObservableField<Int>(mCount)
 
+    var obsTestItem = (TestItem(3,"3")).toMutableLiveData()
+
     init {
         Timber.d("MainViewModel - init ${count.value}")
         observableCount.set(count.value)
@@ -39,6 +42,10 @@ class MainViewModel : ViewModel() {
 
     private fun loadData(rnd : Int) {
         helloText.value = "New Int Value Generated - $rnd"
+    }
+
+    fun getTestItem() : LiveData<TestItem> {
+        return obsTestItem
     }
 
     /** Метод не обязательно должен наследовать OnClickListener. Но должен быть public и иметь те же параметры,
@@ -62,6 +69,7 @@ class MainViewModel : ViewModel() {
         loadData(rnd)
         count.value = rnd
         observableCount.set(rnd)
+        obsTestItem.value = TestItem(rnd, rnd.toString())
     }
 
 
