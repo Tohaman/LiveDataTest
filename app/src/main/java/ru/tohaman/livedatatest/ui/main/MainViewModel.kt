@@ -17,16 +17,15 @@ import kotlin.random.Random
  */
 
 
-class MainViewModel(private val _count: MutableLiveData<Int> = MutableLiveData()) : ViewModel() {
+class MainViewModel : ViewModel() {
 
     //Переменная, на которую можно подписаться из фрагмента/активити, но без автообновлений в биндинге
-    var count = _count
+    var count = mCount.toMutableLiveData()
 
     //А такая будет автообноляться и в биндинге
-    var observableCount = ObservableField<Int>()
+    var observableCount = ObservableField<Int>(mCount)
 
     init {
-        count = _count
         Timber.d("MainViewModel - init ${count.value}")
         observableCount.set(count.value)
     }
@@ -72,13 +71,16 @@ class MainViewModel(private val _count: MutableLiveData<Int> = MutableLiveData()
          * или задать какие-то по-умолчанию. Т.е. в данном случае при создании объекта не через фабрику
          * [count] будет пустым, а при создании через фабрику параметр [count] обязательный
          */
+        var mCount : Int = 0
+
         class MainViewModelFactory (private val count: Int) : NewInstanceFactory() {
 
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 Timber.d("MainViewModelFactory - Create $count")
+                mCount = count
                 //Преобразуем в MutableLiveData через KotlinExtensions, которые заданы в LiveDataExtensions.kt
-                return MainViewModel(count.toMutableLiveData()) as T
+                return MainViewModel() as T
             }
         }
     }

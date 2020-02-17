@@ -46,7 +46,7 @@ class MainFragment : Fragment() {
         //можно вызвать viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         //но в этом случае viewModel.count не будет сразу инициализирован
 
-        val rnd = Random.nextInt(1,10)
+        //val rnd = Random.nextInt(1,10)
         //viewModel = ViewModelProvider(this, MainViewModel.Companion.MainViewModelFactory(rnd)).get(MainViewModel::class.java)
         //передаем viewModel в биндинг (один раз и все, больше его не обновляем)
         Timber.d("binding.viewModel")
