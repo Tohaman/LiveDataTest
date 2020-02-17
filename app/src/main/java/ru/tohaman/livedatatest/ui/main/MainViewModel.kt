@@ -26,15 +26,18 @@ class MainViewModel : ViewModel() {
     //А такая будет автообноляться и в биндинге
     var observableCount = ObservableField<Int>(mCount)
 
-    var obsTestItem = (TestItem(3,"3")).toMutableLiveData()
+    var obsTestItem = (TestItem(mCount, mCount.toString())).toMutableLiveData()
 
     init {
-        Timber.d("MainViewModel - init ${count.value}")
+        Timber.d("MainViewModel - mCount=$mCount, but count.value=${count.value}")
+        //но на данный момент mCount<>count.value (см.лог), поэтому делаем так.
+        //count.value = mCount
         observableCount.set(count.value)
     }
 
     //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
-    private val helloText = MutableLiveData<String>("Hello World - ${count.value}")
+    //и count.value в начальный момент = null
+    private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
 
     fun getHelloText() : LiveData<String> {
         return  helloText
@@ -42,10 +45,6 @@ class MainViewModel : ViewModel() {
 
     private fun loadData(rnd : Int) {
         helloText.value = "New Int Value Generated - $rnd"
-    }
-
-    fun getTestItem() : LiveData<TestItem> {
-        return obsTestItem
     }
 
     /** Метод не обязательно должен наследовать OnClickListener. Но должен быть public и иметь те же параметры,

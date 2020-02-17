@@ -25,7 +25,7 @@ class MainFragment : Fragment() {
     //private lateinit var viewModel: MainViewModel
     //или инициализируем через by viewModels, но для этого надо добавить implementation "androidx.navigation:navigation-fragment-ktx:2.2.1" в build.gradle
     private val viewModel : MainViewModel by viewModels{
-        val rnd = Random.nextInt(1,10)
+        val rnd = Random.nextInt(30,40)
         Timber.d("by viewModels with $rnd")
         MainViewModel.Companion.MainViewModelFactory(rnd)
     }
@@ -54,11 +54,13 @@ class MainFragment : Fragment() {
         //передаем viewModel в биндинг (один раз и все, больше его не обновляем)
         Timber.d("binding.viewModel")
         binding.viewModel = viewModel
+        //Если мы зададим viewModel.observableCount.set(56), то оно сразу отобразится, иначе оно будет null
+        //viewModel.observableCount.set(56)
 
         //Казалось бы можно сделать так
         //binding.testItem = viewModel.getTestItem().value
         //но в этом случае, не будет автообновления переменной
-        val dataTestItem : LiveData<TestItem> = viewModel.getTestItem()
+        val dataTestItem : LiveData<TestItem> = viewModel.obsTestItem
         dataTestItem.observe(viewLifecycleOwner, Observer { binding.testItem = it })
 
         //но можем связать какое-то свойство визуального объекта и не через биндинг, а по-старинке
