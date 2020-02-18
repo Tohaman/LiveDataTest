@@ -26,18 +26,21 @@ class MainViewModel : ViewModel() {
     //А такая будет автообноляться и в биндинге
     var observableCount = ObservableField<Int>(mCount)
 
+    //Переменная с автообновлением в бинндинге собственного типа
     var obsTestItem = (TestItem(mCount, mCount.toString())).toMutableLiveData()
 
+    //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
+    private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
+
+
     init {
-        Timber.d("MainViewModel - mCount=$mCount, but count.value=${count.value}")
-        //но на данный момент mCount<>count.value (см.лог), поэтому делаем так.
-        //count.value = mCount
+        Timber.d("MainViewModel - mCount=$mCount, but count.value=${count.value} and obsTestItem=${obsTestItem.value}")
+        //но на данный момент переменные для биндинга = null (см.запись в логе), поэтому делаем так.
+        count.value = mCount
         observableCount.set(count.value)
+        obsTestItem.value = TestItem(mCount, mCount.toString())
     }
 
-    //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
-    //и count.value в начальный момент = null
-    private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
 
     fun getHelloText() : LiveData<String> {
         return  helloText
@@ -50,7 +53,7 @@ class MainViewModel : ViewModel() {
     /** Метод не обязательно должен наследовать OnClickListener. Но должен быть public и иметь те же параметры,
     * что и метод OnClickListener.onClick(View view), т.е. должен быть один параметр типа View. Имя метода может быть любым.
     * вызов в лэйауте выглядит так: android:onClick="@{viewModel::onButtonClick}"
-    * а если использовать такой вызов android:onClick="@{(view) -> viewModel.onButtonClick(view)}"
+    * а если в layout использовать такой вызов android:onClick="@{(view) -> viewModel.onButtonClick(view)}"
     * то можно обойтись и без ненужного в данном случае параметра view, т.е. android:onClick="@{() -> viewModel.onButtonClick2()}"
     */
 
