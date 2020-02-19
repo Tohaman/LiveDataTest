@@ -26,7 +26,7 @@ class MainViewModel : ViewModel() {
     //А такая будет автообноляться и в биндинге
     var observableCount = ObservableField<Int>(mCount)
 
-    //Переменная с автообновлением в бинндинге собственного типа
+    //Переменная собственно типа, на которую надо подписаться для автообновления
     var obsTestItem = (TestItem(mCount, mCount.toString())).toMutableLiveData()
 
     //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
