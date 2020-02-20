@@ -1,6 +1,13 @@
 package ru.tohaman.livedatatest.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class TestItem (
-    var i : Int = 0,
-    var st : String = ""
+    @PrimaryKey (autoGenerate = true)
+    var id : Int,
+    var num: Int = 1,
+    var st : String = "First"
+
 )

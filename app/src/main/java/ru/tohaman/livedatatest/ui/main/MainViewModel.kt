@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import ru.tohaman.livedatatest.data.TestItem
+import ru.tohaman.livedatatest.data.testDatabase
 import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
 import kotlin.random.Random
@@ -27,10 +28,13 @@ class MainViewModel : ViewModel() {
     var observableCount = ObservableField<Int>(mCount)
 
     //Переменная с автообновлением в бинндинге собственного типа
-    var obsTestItem = (TestItem(mCount, mCount.toString())).toMutableLiveData()
+    var obsTestItem = (TestItem(0, mCount, mCount.toString())).toMutableLiveData()
 
     //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
     private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
+
+    //Получим livedata из базы room
+    var itemList = testDatabase.testDao.getAllItems()
 
 
     init {
@@ -38,7 +42,7 @@ class MainViewModel : ViewModel() {
         //но на данный момент переменные для биндинга = null (см.запись в логе), поэтому делаем так.
         count.value = mCount
         observableCount.set(count.value)
-        obsTestItem.value = TestItem(mCount, mCount.toString())
+        obsTestItem.value = TestItem(0, mCount, mCount.toString())
     }
 
 
@@ -59,19 +63,17 @@ class MainViewModel : ViewModel() {
 
     fun onButtonClick(view : View) {
         Timber.d("onButtonClick")
-        val rnd = Random.nextInt(1,10)
-        loadData(rnd)
-        count.value = rnd
-        observableCount.set(rnd)
+        onButtonClick2()
     }
 
     fun onButtonClick2() {
         Timber.d("onButtonClick2")
         val rnd = Random.nextInt(1,10)
+        val ost = rnd % 4
         loadData(rnd)
         count.value = rnd
         observableCount.set(rnd)
-        obsTestItem.value = TestItem(rnd, rnd.toString())
+        obsTestItem.value = TestItem(0, rnd, rnd.toString())
     }
 
 

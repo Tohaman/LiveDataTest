@@ -20,11 +20,12 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainFragment">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text = "1"
-            app:showInt="@{testItem.i}"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            tools:listitem="@layout/rcv_item"
             app:layout_constraintBottom_toTopOf="@+id/message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,17 +67,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            tools:text = "100"
-            app:showInt="@{viewModel.observableCount}"
-            app:layout_constraintBottom_toTopOf="@+id/button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/count" />
+            app:layout_constraintTop_toBottomOf="@+id/count"
+            app:layout_constraintBottom_toTopOf="@+id/count3"
+            app:showInt="@{viewModel.observableCount}"
+            tools:text="100" />
 
         <!-- Нажатие можно обрабатывать так-->
         <!-- android:onClick="@{() -> viewModel.onButtonClick2()}"-->
         <!-- или так-->
         <!-- android:onClick="@{(view) -> viewModel.onButtonClick(view)}"-->
+        <TextView
+            android:id="@+id/count3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/count2"
+            app:showInt="@{testItem.num}"
+            tools:text="1" />
+
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"

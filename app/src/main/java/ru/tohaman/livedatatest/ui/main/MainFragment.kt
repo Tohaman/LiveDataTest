@@ -63,6 +63,8 @@ class MainFragment : Fragment() {
         val dataTestItem : LiveData<TestItem> = viewModel.obsTestItem
         dataTestItem.observe(viewLifecycleOwner, Observer { binding.testItem = it })
 
+        val list = viewModel.itemList
+
         //но можем связать какое-то свойство визуального объекта и не через биндинг, а по-старинке
         //вместо findViewById просто используем id элемента, например, message.text = ....
         //Поскольку связываем через data.observe, то при изменении viewModel.helloText текст во View тоже будет меняться
