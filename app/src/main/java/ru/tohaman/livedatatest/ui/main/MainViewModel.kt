@@ -6,8 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import ru.tohaman.livedatatest.data.TestDB
 import ru.tohaman.livedatatest.data.TestItem
+import ru.tohaman.livedatatest.data.UserData
 import ru.tohaman.livedatatest.data.testDatabase
+import ru.tohaman.livedatatest.ioThread
 import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
 import kotlin.random.Random
@@ -21,6 +24,7 @@ import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
 
+    private val dao = testDatabase.testDao
     //Переменная, на которую можно подписаться из фрагмента/активити, но без автообновлений в биндинге
     var count = mCount.toMutableLiveData()
 
@@ -34,7 +38,8 @@ class MainViewModel : ViewModel() {
     private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
 
     //Получим livedata из базы room
-    var itemList = testDatabase.testDao.getAllItems()
+    var itemsList : MutableLiveData<List<TestItem>> = MutableLiveData()
+    var itemsList2 = dao.getAllItems()
 
 
     init {
@@ -43,8 +48,11 @@ class MainViewModel : ViewModel() {
         count.value = mCount
         observableCount.set(count.value)
         obsTestItem.value = TestItem(0, mCount, mCount.toString())
+        itemsList.value = UserData.getList2()
     }
 
+
+    fun getListItems() = itemsList
 
     fun getHelloText() : LiveData<String> {
         return  helloText
@@ -74,6 +82,9 @@ class MainViewModel : ViewModel() {
         count.value = rnd
         observableCount.set(rnd)
         obsTestItem.value = TestItem(0, rnd, rnd.toString())
+        val lst = TestDB.get().testDao.getAllItems().value
+        Timber.d("lst $lst")
+        itemsList.value = testDatabase.testDao.getAllItems().value
     }
 
 

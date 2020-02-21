@@ -9,9 +9,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.main_fragment.*
 import ru.tohaman.livedatatest.data.TestItem
 import ru.tohaman.livedatatest.databinding.MainFragmentBinding
+import ru.tohaman.livedatatest.recycleview.TestAdapter
 import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
 import kotlin.random.Random
@@ -63,7 +65,19 @@ class MainFragment : Fragment() {
         val dataTestItem : LiveData<TestItem> = viewModel.obsTestItem
         dataTestItem.observe(viewLifecycleOwner, Observer { binding.testItem = it })
 
-        val list = viewModel.itemList
+        //инициализируем адаптер и присваиваем его списку
+        val adapter = TestAdapter()
+        rcv.layoutManager = LinearLayoutManager (context)
+        rcv.adapter = adapter
+
+        //подписываем адаптер на изменения списка
+        viewModel.itemsList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Timber.d ("$it")
+                adapter.refreshItems(it)
+            }
+        })
+        Timber.d("ListItems - ${viewModel.getListItems().value}")
 
         //но можем связать какое-то свойство визуального объекта и не через биндинг, а по-старинке
         //вместо findViewById просто используем id элемента, например, message.text = ....

@@ -15,34 +15,52 @@ private const val DATABASE_NAME = "base.db"
 
 val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplication()) }
 
-private fun buildDatabase(context: Context) : TestDB {
-    val db = Room.databaseBuilder(context,
-        TestDB::class.java, DATABASE_NAME)
-        .fallbackToDestructiveMigration()
+private fun buildDatabase(context: Context) : TestDB =
+    Room.databaseBuilder(context, TestDB::class.java, DATABASE_NAME)
+        .addCallback(object : RoomDatabase.Callback(){
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
+                TestDB.fillDb()
+            }
+        })
         .build()
-    fillDb()
-    return db
-}
 
-fun fillDb() {
-    ioThread {
-        Timber.tag(TAG).d("insert data to DB")
-        testDatabase.testDao.insert(TestItem(0, 1,"First1"))
-        testDatabase.testDao.insert(TestItem(0, 1,"First2"))
-        testDatabase.testDao.insert(TestItem(0, 1,"First3"))
-        testDatabase.testDao.insert(TestItem(0, 2,"Second1"))
-        testDatabase.testDao.insert(TestItem(0, 2,"Second2"))
-        testDatabase.testDao.insert(TestItem(0, 2,"Second3"))
-        testDatabase.testDao.insert(TestItem(0, 3,"Third1"))
-        testDatabase.testDao.insert(TestItem(0, 3,"Third2"))
-        testDatabase.testDao.insert(TestItem(0, 3,"Third3"))
-        testDatabase.testDao.insert(TestItem(0, 3,"Third4"))
-    }
-}
 
 
 @Database (entities = [TestItem::class], version = 1)
 abstract class TestDB : RoomDatabase() {
     abstract val testDao : TestItemDao
 
+    companion object {
+        private var instance : TestDB? = null
+        @Synchronized
+        fun get() : TestDB {
+            if (instance == null) {
+                instance = Room.databaseBuilder(applicationLiveData.getApplication(),
+                    TestDB::class.java, DATABASE_NAME)
+                    .addCallback(object : RoomDatabase.Callback(){
+                        override fun onOpen(db: SupportSQLiteDatabase) {
+                            fillDb()
+                        }
+                    }).build()
+            }
+            return instance!!
+        }
+
+        fun fillDb() {
+            ioThread {
+                Timber.tag(TAG).d("insert data to DB")
+                TestDB.get().testDao.insert(TestItem(0, 1,"First1"))
+                testDatabase.testDao.insert(TestItem(0, 1,"First2"))
+                testDatabase.testDao.insert(TestItem(0, 1,"First3"))
+                testDatabase.testDao.insert(TestItem(0, 2,"Second1"))
+                testDatabase.testDao.insert(TestItem(0, 2,"Second2"))
+                testDatabase.testDao.insert(TestItem(0, 2,"Second3"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third1"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third2"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third3"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third4"))
+            }
+        }
+    }
 }
