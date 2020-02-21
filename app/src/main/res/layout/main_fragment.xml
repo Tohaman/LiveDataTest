@@ -11,7 +11,7 @@
             type="ru.tohaman.livedatatest.ui.main.MainViewModel"/>
         <variable
             name="testItem"
-            type="ru.tohaman.livedatatest.data.TestItem" />
+            type="ru.tohaman.livedatatest.data.TestItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
