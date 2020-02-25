@@ -18,9 +18,9 @@ val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplica
 private fun buildDatabase(context: Context) : TestDB =
     Room.databaseBuilder(context, TestDB::class.java, DATABASE_NAME)
         .addCallback(object : RoomDatabase.Callback(){
-            //onOpen - срабатывает при каждом открытии программы (база пересоздается), можно
+            //onOpen - срабатывает при каждом открытии программы, можно
             //поменять на onCreate, тогда будет срабатывать только при первом создании базы
-            override fun onOpen(db: SupportSQLiteDatabase) {
+            override fun onCreate(db: SupportSQLiteDatabase) {
                 Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
                 //заполняем базу какими-то записями
                 TestDB.fillDb()
@@ -55,16 +55,16 @@ abstract class TestDB : RoomDatabase() {
         fun fillDb() {
             ioThread {
                 Timber.tag(TAG).d("insert data to DB")
-                testDatabase.testDao.insert(TestItem(0, 1,"First1"))
-                testDatabase.testDao.insert(TestItem(0, 1,"First2"))
-                testDatabase.testDao.insert(TestItem(0, 1,"First3"))
-                testDatabase.testDao.insert(TestItem(0, 2,"Second1"))
-                testDatabase.testDao.insert(TestItem(0, 2,"Second2"))
-                testDatabase.testDao.insert(TestItem(0, 2,"Second3"))
-                testDatabase.testDao.insert(TestItem(0, 3,"Third1"))
-                testDatabase.testDao.insert(TestItem(0, 3,"Third2"))
-                testDatabase.testDao.insert(TestItem(0, 3,"Third3"))
-                testDatabase.testDao.insert(TestItem(0, 3,"Third4"))
+                testDatabase.testDao.insert(TestItem(0, 1,"First 1"))
+                testDatabase.testDao.insert(TestItem(0, 2,"Second 1"))
+                testDatabase.testDao.insert(TestItem(0, 2,"Second 2"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third 1"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third 2"))
+                testDatabase.testDao.insert(TestItem(0, 3,"Third 3"))
+                testDatabase.testDao.insert(TestItem(0, 4,"Четыре 1"))
+                testDatabase.testDao.insert(TestItem(0, 4,"Четыре 2"))
+                testDatabase.testDao.insert(TestItem(0, 4,"Четыре 3"))
+                testDatabase.testDao.insert(TestItem(0, 4,"Четыре 4"))
             }
         }
     }

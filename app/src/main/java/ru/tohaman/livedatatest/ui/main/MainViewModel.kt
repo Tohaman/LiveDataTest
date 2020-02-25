@@ -18,7 +18,7 @@ import kotlin.random.Random
 /**
  * Создаем viewModel - класс, который будет управлять нашим простым приложением, но при этом
  * он ничего не знает о том, как отображать данные, т.е. о View (UI), т.е. если мы что-то захотим
- * добавить во view или убрать, нам не надо переписывать управление
+ * добавить во view или убрать, нам не надо переписывать управление (ViewModel).
  */
 
 
@@ -76,8 +76,8 @@ class MainViewModel : ViewModel() {
 
     fun onButtonClick2() {
         Timber.d("onButtonClick2")
-        val rnd = Random.nextInt(1,10)
-        val ost = rnd % 4
+        val rnd = Random.nextInt(1,10) //Случайное число от 1 до 10
+        val ost = (rnd - 1) % 4 + 1  //остаток от деления на 4, но поскольку у нас num в базе от 1 до 4, то делаем -1 и +1
         loadData(rnd)
         count.value = rnd
         observableCount.set(rnd)
@@ -86,7 +86,8 @@ class MainViewModel : ViewModel() {
         //В реальных условиях, лучше использовать отдельный класс "репозиторий", в котором использовать suspend функции для
         //получения таких данных, например как тут https://github.com/OmneyaOsman/PetsShelter
         ioThread {
-            val lst = testDatabase.testDao.getAllItems()
+            //получаем список по остатку от деления нашего случаайного числа
+            val lst = testDatabase.testDao.getByNum(ost)
             Timber.d("lst = $lst")
             //И опять же, поскольку поток не основной, то не можем использовать itemList.value = ...  ,
             // т.е. itemList.setValue(...), соотвественно используем postValue
