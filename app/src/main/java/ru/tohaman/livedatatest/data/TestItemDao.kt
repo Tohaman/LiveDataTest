@@ -8,10 +8,10 @@ import androidx.room.Query
 @Dao
 interface TestItemDao {
     @Query("SELECT * FROM TestItem")
-    fun getAllItems(): LiveData<List<TestItem>>
+    fun getAllItems(): List<TestItem>
 
     @Query("SELECT * FROM TestItem WHERE num = :num")
-    fun getByNum(num : Int) : LiveData<List<TestItem>>
+    fun getByNum(num : Int) : List<TestItem>
 
     @Insert
     fun insert(testItem: TestItem?)

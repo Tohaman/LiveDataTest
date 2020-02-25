@@ -18,7 +18,7 @@ val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplica
 private fun buildDatabase(context: Context) : TestDB =
     Room.databaseBuilder(context, TestDB::class.java, DATABASE_NAME)
         .addCallback(object : RoomDatabase.Callback(){
-            override fun onCreate(db: SupportSQLiteDatabase) {
+            override fun onOpen(db: SupportSQLiteDatabase) {
                 Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
                 TestDB.fillDb()
             }
@@ -32,25 +32,25 @@ abstract class TestDB : RoomDatabase() {
     abstract val testDao : TestItemDao
 
     companion object {
-        private var instance : TestDB? = null
-        @Synchronized
-        fun get() : TestDB {
-            if (instance == null) {
-                instance = Room.databaseBuilder(applicationLiveData.getApplication(),
-                    TestDB::class.java, DATABASE_NAME)
-                    .addCallback(object : RoomDatabase.Callback(){
-                        override fun onOpen(db: SupportSQLiteDatabase) {
-                            fillDb()
-                        }
-                    }).build()
-            }
-            return instance!!
-        }
+//        private var instance : TestDB? = null
+//        @Synchronized
+//        fun get() : TestDB {
+//            if (instance == null) {
+//                instance = Room.databaseBuilder(applicationLiveData.getApplication(),
+//                    TestDB::class.java, DATABASE_NAME)
+//                    .addCallback(object : RoomDatabase.Callback(){
+//                        override fun onOpen(db: SupportSQLiteDatabase) {
+//                            fillDb()
+//                        }
+//                    }).build()
+//            }
+//            return instance!!
+//        }
 
         fun fillDb() {
             ioThread {
                 Timber.tag(TAG).d("insert data to DB")
-                TestDB.get().testDao.insert(TestItem(0, 1,"First1"))
+                testDatabase.testDao.insert(TestItem(0, 1,"First1"))
                 testDatabase.testDao.insert(TestItem(0, 1,"First2"))
                 testDatabase.testDao.insert(TestItem(0, 1,"First3"))
                 testDatabase.testDao.insert(TestItem(0, 2,"Second1"))

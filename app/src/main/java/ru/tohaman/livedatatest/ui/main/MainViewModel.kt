@@ -39,7 +39,7 @@ class MainViewModel : ViewModel() {
 
     //Получим livedata из базы room
     var itemsList : MutableLiveData<List<TestItem>> = MutableLiveData()
-    var itemsList2 = dao.getAllItems()
+    //var itemsList2 = dao.getAllItems()
 
 
     init {
@@ -82,9 +82,11 @@ class MainViewModel : ViewModel() {
         count.value = rnd
         observableCount.set(rnd)
         obsTestItem.value = TestItem(0, rnd, rnd.toString())
-        val lst = TestDB.get().testDao.getAllItems().value
-        Timber.d("lst $lst")
-        itemsList.value = testDatabase.testDao.getAllItems().value
+        ioThread {
+            val lst = testDatabase.testDao.getAllItems()
+            Timber.d("lst = $lst")
+            itemsList.postValue(lst)
+        }
     }
 
 

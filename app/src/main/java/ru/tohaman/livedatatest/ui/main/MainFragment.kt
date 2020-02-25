@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
         //подписываем адаптер на изменения списка
         viewModel.itemsList.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Timber.d ("$it")
+                Timber.d ("Podpiska - $it")
                 adapter.refreshItems(it)
             }
         })
