@@ -60,8 +60,8 @@ class MainFragment : Fragment() {
         //viewModel.observableCount.set(56)
 
         //Казалось бы можно сделать так
-        //binding.testItem = viewModel.getTestItem().value
-        //но в этом случае, не будет автообновления переменной
+        //binding.testItem = viewModel.obsTestItem().value
+        //но в этом случае, не будет автообновления переменной, поэтому подписываемся на obsTestItem
         val dataTestItem : LiveData<TestItem> = viewModel.obsTestItem
         dataTestItem.observe(viewLifecycleOwner, Observer { binding.testItem = it })
 
@@ -73,11 +73,10 @@ class MainFragment : Fragment() {
         //подписываем адаптер на изменения списка
         viewModel.itemsList.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Timber.d ("Podpiska - $it")
+                Timber.d ("Сработало обновление списка для адаптера - $it")
                 adapter.refreshItems(it)
             }
         })
-        Timber.d("ListItems - ${viewModel.getListItems().value}")
 
         //но можем связать какое-то свойство визуального объекта и не через биндинг, а по-старинке
         //вместо findViewById просто используем id элемента, например, message.text = ....

@@ -10,7 +10,7 @@ import ru.tohaman.livedatatest.R
 import ru.tohaman.livedatatest.data.TestItem
 
 class TestAdapter : RecyclerView.Adapter<TestAdapter.TestHolder>() {
-
+    //Тут храним список элементов нашего RecycleView
     private var items: List<TestItem> = ArrayList()
 
     //создает RecyclerView.ViewHolder и инициализирует views для списка
@@ -26,6 +26,7 @@ class TestAdapter : RecyclerView.Adapter<TestAdapter.TestHolder>() {
         viewHolder.bind(items[position])
     }
 
+    //Количество записей = размер списка
     override fun getItemCount(): Int {
         return items.size
     }

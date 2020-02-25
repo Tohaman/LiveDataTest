@@ -37,9 +37,8 @@ class MainViewModel : ViewModel() {
     //На такую переменную не подписаться, т.к. она private, но можно получить через public функцию (getHelloText)
     private val helloText = MutableLiveData<String>("Начальные значения - ${count.value} + ${obsTestItem.value?.st}")
 
-    //Получим livedata из базы room
+    //Зададим mutableLiveData, чтобы на нее можно было подписаться и получать обновления
     var itemsList : MutableLiveData<List<TestItem>> = MutableLiveData()
-    //var itemsList2 = dao.getAllItems()
 
 
     init {
@@ -48,10 +47,11 @@ class MainViewModel : ViewModel() {
         count.value = mCount
         observableCount.set(count.value)
         obsTestItem.value = TestItem(0, mCount, mCount.toString())
+        //Изначально возьмем значения не из базы room, а из простого списка
         itemsList.value = UserData.getList2()
     }
 
-
+    //Можно получить значение через функцию, а можно и напрямую подисаться на переменную во фрагменте
     fun getListItems() = itemsList
 
     fun getHelloText() : LiveData<String> {
@@ -82,9 +82,14 @@ class MainViewModel : ViewModel() {
         count.value = rnd
         observableCount.set(rnd)
         obsTestItem.value = TestItem(0, rnd, rnd.toString())
+        //Поскольку простой List из базы room нельзя получить в основном потоке (LiveData можно), то используем такое расширение функций котлина
+        //В реальных условиях, лучше использовать отдельный класс "репозиторий", в котором использовать suspend функции для
+        //получения таких данных, например как тут https://github.com/OmneyaOsman/PetsShelter
         ioThread {
             val lst = testDatabase.testDao.getAllItems()
             Timber.d("lst = $lst")
+            //И опять же, поскольку поток не основной, то не можем использовать itemList.value = ...  ,
+            // т.е. itemList.setValue(...), соотвественно используем postValue
             itemsList.postValue(lst)
         }
     }

@@ -18,8 +18,11 @@ val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplica
 private fun buildDatabase(context: Context) : TestDB =
     Room.databaseBuilder(context, TestDB::class.java, DATABASE_NAME)
         .addCallback(object : RoomDatabase.Callback(){
+            //onOpen - срабатывает при каждом открытии программы (база пересоздается), можно
+            //поменять на onCreate, тогда будет срабатывать только при первом создании базы
             override fun onOpen(db: SupportSQLiteDatabase) {
                 Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
+                //заполняем базу какими-то записями
                 TestDB.fillDb()
             }
         })
@@ -32,6 +35,8 @@ abstract class TestDB : RoomDatabase() {
     abstract val testDao : TestItemDao
 
     companion object {
+        //Можно инициализировать так, а можно  через переменную testDatabase и fun buildDatabase
+
 //        private var instance : TestDB? = null
 //        @Synchronized
 //        fun get() : TestDB {

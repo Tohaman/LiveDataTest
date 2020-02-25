@@ -2,6 +2,8 @@ package ru.tohaman.livedatatest.data
 
 object UserData {
 
+    //две static функции, возвращающие два разных списка типа List<TestItem> для разных тестов
+
     fun getList1() = listOf(
         TestItem(0,1, "American actress, singer, model"),
         TestItem(0,2, "US President during American civil war"),
