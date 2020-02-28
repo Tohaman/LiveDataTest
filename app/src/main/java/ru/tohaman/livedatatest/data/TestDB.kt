@@ -30,7 +30,7 @@ private fun buildDatabase(context: Context) : TestDB =
 
 
 
-@Database (entities = [TestItem::class], version = 1)
+@Database (entities = [TestItem::class], version = 1, exportSchema = false)
 abstract class TestDB : RoomDatabase() {
     abstract val testDao : TestItemDao
 
