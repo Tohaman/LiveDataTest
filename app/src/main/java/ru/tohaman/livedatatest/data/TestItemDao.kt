@@ -9,13 +9,13 @@ import androidx.room.Query
 interface TestItemDao {
     //Возвращаем список всех записей из базы
     @Query("SELECT * FROM TestItem")
-    fun getAllItems(): List<TestItem>
+    suspend fun getAllItems(): List<TestItem>
 
     //Только записи с опредленным значением num
     @Query("SELECT * FROM TestItem WHERE num = :num")
-    fun getByNum(num : Int) : List<TestItem>
+    suspend fun getByNum(num : Int) : List<TestItem>
 
     //Добавляем запись в базу
     @Insert
-    fun insert(testItem: TestItem?)
+    suspend fun insert(testItem: TestItem?)
 }

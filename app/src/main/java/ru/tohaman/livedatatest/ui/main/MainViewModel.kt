@@ -6,10 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
-import ru.tohaman.livedatatest.data.TestDB
-import ru.tohaman.livedatatest.data.TestItem
-import ru.tohaman.livedatatest.data.UserData
-import ru.tohaman.livedatatest.data.testDatabase
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import ru.tohaman.livedatatest.data.*
 import ru.tohaman.livedatatest.ioThread
 import ru.tohaman.livedatatest.utils.toMutableLiveData
 import timber.log.Timber
@@ -25,6 +27,7 @@ import kotlin.random.Random
 class MainViewModel : ViewModel() {
 
     private val dao = testDatabase.testDao
+    private val repository = TestRepository()
     //Переменная, на которую можно подписаться из фрагмента/активити, но без автообновлений в биндинге
     var count = mCount.toMutableLiveData()
 
@@ -40,6 +43,12 @@ class MainViewModel : ViewModel() {
     //Зададим mutableLiveData, чтобы на нее можно было подписаться и получать обновления
     var itemsList : MutableLiveData<List<TestItem>> = MutableLiveData()
 
+    //Сделаем MutableLiveData<String> из count, преобразуем Int в String
+    private val mutCount = MutableLiveData<String>("${count.value}")
+
+    //Сделаем LiveData из MutableLiveData
+    val liveCount: LiveData<Int>
+        get() = count
 
     init {
         Timber.d("MainViewModel - mCount=$mCount, but count.value=${count.value} and obsTestItem=${obsTestItem.value}")
@@ -85,9 +94,9 @@ class MainViewModel : ViewModel() {
         //Поскольку простой List из базы room нельзя получить в основном потоке (LiveData можно), то используем такое расширение функций котлина
         //В реальных условиях, лучше использовать отдельный класс "репозиторий", в котором использовать suspend функции для
         //получения таких данных, например как тут https://github.com/OmneyaOsman/PetsShelter
-        ioThread {
+        viewModelScope.launch {
             //получаем список по остатку от деления нашего случаайного числа
-            val lst = testDatabase.testDao.getByNum(ost)
+            val lst = repository.getByNum(ost)
             Timber.d("lst = $lst")
             //И опять же, поскольку поток не основной, то не можем использовать itemList.value = ...  ,
             // т.е. itemList.setValue(...), соотвественно используем postValue

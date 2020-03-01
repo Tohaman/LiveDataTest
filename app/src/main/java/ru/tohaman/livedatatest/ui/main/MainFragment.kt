@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.main_fragment.*
 import ru.tohaman.livedatatest.data.TestItem
@@ -89,6 +90,11 @@ class MainFragment : Fragment() {
         //т.к. там мы связали (bind) с полем типа MutableLiveData, то автоматом это поле обновляться при изменении значения не будет
 
         //count2.text свяжем с полем типа ObservableField<Int>(), и оно уже будет автообновляться
+
+        /**текст для [count4] зададим не через биндинг, а привяжем LiveData<Int>, который будет изменяться автоматически*/
+        viewModel.liveCount.observe(viewLifecycleOwner) { value ->
+            count4.text = value.toString()
+        }
 
         /** Если нам необходимо использовать список, как отдельную переменную в layout,
          * например, аналог listOfSomeString : List<String>

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.runBlocking
 import ru.tohaman.livedatatest.TAG
 import ru.tohaman.livedatatest.applicationLiveData
 import ru.tohaman.livedatatest.getApplication
@@ -53,7 +54,7 @@ abstract class TestDB : RoomDatabase() {
 //        }
 
         fun fillDb() {
-            ioThread {
+            runBlocking {
                 Timber.tag(TAG).d("insert data to DB")
                 testDatabase.testDao.insert(TestItem(0, 1,"First 1"))
                 testDatabase.testDao.insert(TestItem(0, 2,"Second 1"))
