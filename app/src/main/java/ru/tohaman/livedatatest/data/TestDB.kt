@@ -12,6 +12,13 @@ import ru.tohaman.livedatatest.getApplication
 import ru.tohaman.livedatatest.ioThread
 import timber.log.Timber
 
+/**
+ * Абстрактный класс базы, поскольку создание такого класса "дорогое удовольствие", то
+ * используем или синглтон (синглет) через создание в companion object instance
+ * или глабоальную переменную testDataBase
+ */
+
+
 private const val DATABASE_NAME = "base.db"
 
 val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplication()) }
