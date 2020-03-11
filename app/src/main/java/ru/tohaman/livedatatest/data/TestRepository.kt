@@ -30,7 +30,7 @@ class TestRepository {
 
     suspend fun getByNum(num : Int) : List<TestItem> {
         //Имитирунм задержку получения данных
-        delay(2000) //2 сек
+        //delay(2000) //2 сек
         return dao.getByNum(num)
     }
 

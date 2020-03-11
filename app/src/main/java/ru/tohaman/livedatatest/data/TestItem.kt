@@ -17,5 +17,4 @@ data class TestItem (
     var id : Int,   //Поле первичный ключ + автогенерируемое значение,
     var num: Int = 1,
     var st : String = "First"
-
 )

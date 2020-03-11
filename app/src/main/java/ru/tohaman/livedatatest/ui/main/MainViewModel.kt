@@ -43,8 +43,12 @@ class MainViewModel : ViewModel() {
     //Зададим mutableLiveData, чтобы на нее можно было подписаться и получать обновления
     var itemsList : MutableLiveData<List<TestItem>> = MutableLiveData()
 
+    //Пока не используются, но можно попробовать обновлять список через них
+    var itemsListSimple : MutableList<TestItem> = mutableListOf()
+    var observableList = ObservableField<List<TestItem>>(itemsListSimple)
+
     //Сделаем MutableLiveData<String> из count, преобразуем Int в String
-    private val mutCount = MutableLiveData<String>("${count.value}")
+    private val mutStringCount = MutableLiveData<String>("${count.value}")
 
     //Сделаем LiveData из MutableLiveData
     val liveCount: LiveData<Int>
@@ -58,6 +62,7 @@ class MainViewModel : ViewModel() {
         obsTestItem.value = TestItem(0, mCount, mCount.toString())
         //Изначально возьмем значения не из базы room, а из простого списка
         itemsList.value = UserData.getList2()
+        itemsListSimple = UserData.getList2() as MutableList<TestItem>
     }
 
     //Можно получить значение через функцию, а можно и напрямую подисаться на переменную во фрагменте
@@ -84,9 +89,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun onButtonClick2() {
-        Timber.d("onButtonClick2")
         val rnd = Random.nextInt(1,10) //Случайное число от 1 до 10
         val ost = (rnd - 1) % 4 + 1  //остаток от деления на 4, но поскольку у нас num в базе от 1 до 4, то делаем -1 и +1
+        Timber.d("onButtonClick2 rnd=$rnd ost=$ost")
         loadData(rnd)
         count.value = rnd
         observableCount.set(rnd)
@@ -101,6 +106,7 @@ class MainViewModel : ViewModel() {
             //И опять же, поскольку поток не основной, то не можем использовать itemList.value = ...  ,
             // т.е. itemList.setValue(...), соотвественно используем postValue
             itemsList.postValue(lst)
+            observableList.set(lst)
         }
     }
 

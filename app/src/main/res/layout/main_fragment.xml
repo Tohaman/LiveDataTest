@@ -12,6 +12,10 @@
         <variable
             name="testItem"
             type="ru.tohaman.livedatatest.data.TestItem"/>
+
+        <variable
+            name="dataList"
+            type="java.util.List"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
