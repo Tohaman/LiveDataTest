@@ -25,15 +25,16 @@ val testDatabase : TestDB by lazy { buildDatabase(applicationLiveData.getApplica
 
 private fun buildDatabase(context: Context) : TestDB =
     Room.databaseBuilder(context, TestDB::class.java, DATABASE_NAME)
-        .addCallback(object : RoomDatabase.Callback(){
-            //onOpen - срабатывает при каждом открытии программы, можно
-            //поменять на onCreate, тогда будет срабатывать только при первом создании базы
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
-                //заполняем базу какими-то записями
-                TestDB.fillDb()
-            }
-        })
+        .fallbackToDestructiveMigration()
+//        .addCallback(object : RoomDatabase.Callback(){
+//            //onOpen - срабатывает при каждом открытии программы, можно
+//            //поменять на onCreate, тогда будет срабатывать только при первом создании базы
+//            override fun onOpen(db: SupportSQLiteDatabase) {
+//                Timber.d("ReCreate database!!! Fill with new data ${applicationLiveData.getApplication()}")
+//                //заполняем базу какими-то записями
+//                TestDB.fillDb()
+//            }
+//        })
         .build()
 
 
