@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.main_fragment.*
 import ru.tohaman.livedatatest.data.TestItem
 import ru.tohaman.livedatatest.databinding.MainFragmentBinding
@@ -70,6 +72,7 @@ class MainFragment : Fragment() {
         val adapter = TestAdapter()
         rcv.layoutManager = LinearLayoutManager (context)
         rcv.adapter = adapter
+        initSwipe(rcv)
 
         //подписываем адаптер на изменения списка
         viewModel.itemsList.observe(viewLifecycleOwner, Observer {
@@ -105,6 +108,35 @@ class MainFragment : Fragment() {
         Ограничения XML не позволяют просто так использовать символы < и >. Поэтому их приходится заменять спецсимволами &lt; и &gt;.
         подробнее можно посмотреть на https://startandroid.ru/ru/courses/architecture-components/27-course/architecture-components/552-urok-19-android-data-binding-vozmozhnosti.html
         */
+
+
+    }
+
+    private fun initSwipe(rcView: RecyclerView) {
+        ItemTouchHelper(object : ItemTouchHelper.Callback() {
+            // Определяем в каких направлениях будет разрешено перетаскивать элементы https://habr.com/ru/post/427681/
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END, 0)
+            }
+
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+                val fromPosition = viewHolder.adapterPosition
+                val toPosition = target.adapterPosition
+
+                //TODO Поменять местами элементы в List и базе
+                //Collections.swap(mutableList, fromPosition, toPosition)
+                //recyclerView.adapter.mo
+                recyclerView.adapter?.notifyItemMoved(fromPosition, toPosition)
+
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            }
+        }).attachToRecyclerView(rcView)
     }
 
 }

@@ -50,6 +50,18 @@ class MainViewModel : ViewModel() {
     val liveCount: LiveData<Int>
         get() = count
 
+    var check = MutableLiveData<Boolean>(true)
+
+    var checked: Boolean
+        get() {
+            Timber.d("Get Checked")
+          return true
+        }
+        set(value) {
+            Timber.d("CorenerBuffer Changed - $value")
+            //cornerBufferSet = value
+        }
+
     init {
         Timber.d("MainViewModel - mCount=$mCount, but count.value=${count.value} and obsTestItem=${obsTestItem.value}")
         //но на данный момент переменные для биндинга = null (см.запись в логе), поэтому делаем так.
@@ -84,7 +96,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun onButtonClick2() {
-        Timber.d("onButtonClick2")
+        Timber.d("onButtonClick2 ${check.value}")
         val rnd = Random.nextInt(1,10) //Случайное число от 1 до 10
         val ost = (rnd - 1) % 4 + 1  //остаток от деления на 4, но поскольку у нас num в базе от 1 до 4, то делаем -1 и +1
         loadData(rnd)
